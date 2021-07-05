@@ -1,8 +1,17 @@
 if [ -z "$1" ]
 then 
-  echo -e "usage: reup service"; exit;
+  echo -e "usage: reup all|service"; exit;
 fi
-cd nacos_stack
-docker-compose rm -svf $1
-docker-compose up -d $1
-docker-compose logs -f --tail=200
+case "$1" in
+  all)
+    ./down
+    ./up
+    ;;
+  *)
+    cd nacos_stack
+    docker-compose rm -svf $1
+    docker-compose up -d $1
+    docker-compose logs -f --tail=200
+    ;;
+esac
+exit 0
