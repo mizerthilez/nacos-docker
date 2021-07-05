@@ -61,3 +61,17 @@ services:
     networks:
       mynet:                        
         ipv4_address: 172.58.0.153
+  tempo:
+    container_name: tempo
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo/tempo-local.yaml:/etc/tempo.yaml
+      - ./tempo_data:/tmp/tempo
+    ports:
+      - "3101:3100"
+      - "14268"  # jaeger ingest
+    restart: on-failure
+    networks:
+      mynet:                        
+        ipv4_address: 172.58.0.154
