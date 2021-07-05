@@ -1,0 +1,1 @@
+cd nacos_stack; docker-compose stop

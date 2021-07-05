@@ -1,0 +1,3 @@
+.*.swp
+nacos_stack/*_data
+nacos_stack/standalone-logs

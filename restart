@@ -1,0 +1,8 @@
+if [ -z "$1" ]
+then 
+  echo -e "usage: restart service"; exit;
+fi
+cd nacos_stack
+docker-compose stop $1
+docker-compose start $1
+docker-compose logs -f --tail=200

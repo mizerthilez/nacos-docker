@@ -1,0 +1,65 @@
+version: "2"
+networks:
+  mynet:
+    external:
+      name: mynet
+services:
+  nacos:
+    image: nacos/nacos-server:latest
+    container_name: nacos
+    environment:
+    - PREFER_HOST_MODE=hostname
+    - MODE=standalone
+    volumes:
+    - ./standalone-logs/:/home/nacos/logs
+    - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
+    - ./nacos_data:/home/nacos/data
+    ports:
+    - "8848:8848"
+    - "9848:9848"
+    restart: on-failure
+    networks:
+      mynet:
+        ipv4_address: 172.58.0.5
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    command: --web.enable-admin-api --storage.tsdb.retention=90d --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles
+    volumes:
+      - ./prometheus/prometheus-standalone.yaml:/etc/prometheus/prometheus.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./prometheus_data:/prometheus
+    ports:
+      - "9091:9090"
+    depends_on:
+      - nacos
+    user: root
+    restart: on-failure
+    networks:
+      mynet:
+        ipv4_address: 172.58.0.151
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana_data:/var/lib/grafana
+    ports:
+      - 3001:3000
+    restart: on-failure
+    networks:
+      mynet:
+        ipv4_address: 172.58.0.152
+  loki:
+    container_name: loki
+    image: grafana/loki:2.2.1
+    volumes:
+      - ./loki/loki-config.yaml:/mnt/config/loki-config.yaml
+      - ./loki_data:/loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/mnt/config/loki-config.yaml
+    restart: on-failure
+    networks:
+      mynet:                        
+        ipv4_address: 172.58.0.153

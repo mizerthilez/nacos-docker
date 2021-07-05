@@ -1,0 +1,1 @@
+cd nacos_stack; docker-compose up -d; docker-compose logs -f --tail=200
