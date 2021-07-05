@@ -31,8 +31,6 @@ services:
       - ./prometheus_data:/prometheus
     ports:
       - "9091:9090"
-    depends_on:
-      - nacos
     user: root
     restart: on-failure
     networks:
