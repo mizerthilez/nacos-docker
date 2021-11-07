@@ -53,7 +53,7 @@ scrape_configs:
         action: labelmap
         replacement: $1
       - source_labels: [__meta_docker_container_name]
-        regex: '/d2_deploy_d2-(.+)'
+        regex: '/d2_deploy.?_d2-(.+)'
         target_label: instance
       - source_labels: [__meta_docker_container_label_com_docker_compose_service]
         regex: 'd2-(.+)'
