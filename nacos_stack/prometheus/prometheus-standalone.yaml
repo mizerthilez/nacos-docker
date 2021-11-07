@@ -52,7 +52,9 @@ scrape_configs:
       - regex: __meta_docker_container_label_prometheus_(.+)
         action: labelmap
         replacement: $1
-      - source_labels: [__meta_docker_container_name, __meta_docker_port_private]
-        regex: '/d2_deploy_(.+)'
-        separator: ":"
+      - source_labels: [__meta_docker_container_name]
+        regex: '/d2_deploy_d2-(.+)'
         target_label: instance
+      - source_labels: [__meta_docker_container_label_com_docker_compose_service]
+        regex: 'd2-(.+)'
+        target_label: server
